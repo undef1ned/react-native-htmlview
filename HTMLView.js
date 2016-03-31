@@ -37,13 +37,12 @@ function htmlToElement(rawHtml, opts, done) {
                 }
 
                 if (node.name == 'img') {
-                    console.log(node)
                     const _style = node.attribs.class === 'smiley' ? opts.styles.smiley : {}
                     return (
                         <Image
-                        style={_style}
-                        source={{uri: node.attribs.src}}
-                        style={{width: 20, height: 20}}
+                            source={{uri: node.attribs.src}}
+                            style={_style}
+                            resizeMode="contain"
                         />
                     )
                 }

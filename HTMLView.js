@@ -1,12 +1,13 @@
-var htmlparser = require('./vendor/htmlparser2')
-var entities = require('./vendor/entities')
-var React = require('react-native')
-var {
+import htmlparser from './vendor/htmlparser2'
+import entities from './vendor/entities'
+import React from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import {
     Linking,
     StyleSheet,
     Text,
     Image
-} = React
+} from 'react-native'
 
 var LINE_BREAK = '\n'
 var PARAGRAPH_BREAK = '\n\n'
@@ -72,7 +73,7 @@ function htmlToElement(rawHtml, opts, done) {
 
 var HTMLView = React.createClass({
     mixins: [
-        React.addons.PureRenderMixin,
+        PureRenderMixin
     ],
     getDefaultProps() {
         return {

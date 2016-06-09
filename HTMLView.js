@@ -2,11 +2,15 @@ import htmlparser from './vendor/htmlparser2'
 import entities from './vendor/entities'
 import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
+import FitImage from 'react-native-fit-image'
+import Lightbox from 'react-native-lightbox'
 import {
     Linking,
     StyleSheet,
     Text,
-    Image
+    Image,
+    View,
+    TouchableWithoutFeedback
 } from 'react-native'
 
 var LINE_BREAK = '\n'
@@ -25,42 +29,70 @@ function htmlToElement(rawHtml, opts, done) {
 
             if (node.type == 'text') {
                 return (
-                    <Text key={index} style={parent ? opts.styles[parent.name] : opts.styles.text}>
-                    {entities.decodeHTML(node.data)}
+                    <Text
+                        key={index}
+                        style={parent ? opts.styles[parent.name] : opts.styles.text}
+                    >
+                        {entities.decodeHTML(node.data)}
                     </Text>
                 )
             }
 
             if (node.type == 'tag') {
-                var linkPressHandler = null
+                console.log(node.name, node.attribs)
                 if (node.name == 'a' && node.attribs && node.attribs.href) {
-                    linkPressHandler = () => opts.linkHandler(entities.decodeHTML(node.attribs.href))
-                }
-
-                if (node.name == 'img') {
-                    const _style = node.attribs.class === 'smiley' ? opts.styles.smiley : opts.styles.image
                     return (
-                        <Image
-                            source={{uri: node.attribs.src}}
-                            style={_style}
-                            resizeMode="contain"
-                        />
+                        <Text
+                            key={index}
+                            onPress={() => {
+                                console.log('onpress')
+                                opts.linkHandler(entities.decodeHTML(node.attribs.href))
+                            }
+                        }>
+                            {domToElement(node.children, node)}
+                        </Text>
                     )
                 }
 
+                if (node.name == 'img') {
+                    if (node.attribs.class === 'smiley'){
+                        return (
+                            <Image
+                                key={index}
+                                source={{uri: node.attribs.src}}
+                                style={opts.styles.smiley}
+                                resizeMode="contain"
+                            />
+                        )
+                    } else {
+                        return (
+                            <Image
+                                key={index}
+                                source={{uri: node.attribs.src}}
+                                style={opts.styles.image}
+                                resizeMode="contain"
+                            />
+                        )
+                    }
+                }
+
                 return (
-                    <Text key={index} onPress={linkPressHandler}>
-                    {node.name == 'pre' ? LINE_BREAK : null}
-                    {node.name == 'li' ? BULLET : null}
-                    {domToElement(node.children, node)}
-                    {node.name == 'br' || node.name == 'li' ? LINE_BREAK : null}
-                    {node.name == 'p' && index < list.length-1 ? PARAGRAPH_BREAK : null}
-                    {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? PARAGRAPH_BREAK : null}
-                    </Text>
+                    <View key={index}>
+                        {node.name == 'pre' ? LINE_BREAK : null}
+                        {node.name == 'li' ? BULLET : null}
+                        {domToElement(node.children, node)}
+                        {node.name == 'br' || node.name == 'li' ? LINE_BREAK : null}
+                        {node.name == 'p' && index < list.length-1 ? PARAGRAPH_BREAK : null}
+                        {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? PARAGRAPH_BREAK : null}
+                    </View>
                 )
             }
         })
     }
+
+    // <Lightbox underlayColor="white" navigator={opts.navigator}>
+    //
+    // </Lightbox>
 
     var handler = new htmlparser.DomHandler(function (err, dom) {
         if (err) done(err)
@@ -108,6 +140,7 @@ var HTMLView = React.createClass({
             linkHandler: this.props.onLinkPress,
             styles: Object.assign({}, baseStyles, this.props.stylesheet),
             customRenderer: this.props.renderNode,
+            navigator: this.props.navigator
         }
 
         this.renderingHtml = true
@@ -121,9 +154,9 @@ var HTMLView = React.createClass({
     },
     render() {
         if (this.state.element) {
-            return <Text children={this.state.element} />
+            return <View children={this.state.element} />
         }
-        return <Text />
+        return <View />
     }
 })
 

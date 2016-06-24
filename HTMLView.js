@@ -39,7 +39,6 @@ function htmlToElement(rawHtml, opts, done) {
             }
 
             if (node.type == 'tag') {
-                console.log(node.name, node.attribs)
                 if (node.name == 'a' && node.attribs && node.attribs.href) {
                     return (
                         <Text
@@ -66,10 +65,11 @@ function htmlToElement(rawHtml, opts, done) {
                         )
                     } else {
                         return (
-                            <Image
+                            <FitImage
+                                originalWidth={parseInt(node.attribs['hbx-width'], 10)}
+                                originalHeight={parseInt(node.attribs['hbx-height'], 10)}
                                 key={index}
                                 source={{uri: node.attribs.src}}
-                                style={opts.styles.image}
                                 resizeMode="contain"
                             />
                         )

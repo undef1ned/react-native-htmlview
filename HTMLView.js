@@ -150,8 +150,9 @@ var HTMLView = React.createClass({
         })
     },
     render() {
+        let styles = Object.assign({}, baseStyles, this.props.stylesheet)
         if (this.state.element) {
-            return <Text children={this.state.element} />
+            return <Text style={styles.text} children={this.state.element} />
         }
         return <Text />
     }

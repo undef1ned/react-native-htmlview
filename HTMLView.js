@@ -3,13 +3,11 @@ import entities from './vendor/entities'
 import React from 'react'
 import PureRenderMixin from 'react-addons-pure-render-mixin'
 import FitImage from 'react-native-fit-image'
-import Lightbox from 'react-native-lightbox'
 import {
     Linking,
     StyleSheet,
     Text,
     Image,
-    View,
     TouchableWithoutFeedback
 } from 'react-native'
 
@@ -44,7 +42,6 @@ function htmlToElement(rawHtml, opts, done) {
                         <Text
                             key={index}
                             onPress={() => {
-                                console.log('onpress')
                                 opts.linkHandler(entities.decodeHTML(node.attribs.href))
                             }
                         }>
@@ -77,14 +74,14 @@ function htmlToElement(rawHtml, opts, done) {
                 }
 
                 return (
-                    <View key={index}>
+                    <Text key={index}>
                         {node.name == 'pre' ? LINE_BREAK : null}
                         {node.name == 'li' ? BULLET : null}
                         {domToElement(node.children, node)}
                         {node.name == 'br' || node.name == 'li' ? LINE_BREAK : null}
                         {node.name == 'p' && index < list.length-1 ? PARAGRAPH_BREAK : null}
                         {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? PARAGRAPH_BREAK : null}
-                    </View>
+                    </Text>
                 )
             }
         })
@@ -154,9 +151,9 @@ var HTMLView = React.createClass({
     },
     render() {
         if (this.state.element) {
-            return <View children={this.state.element} />
+            return <Text children={this.state.element} />
         }
-        return <View />
+        return <Text />
     }
 })
 

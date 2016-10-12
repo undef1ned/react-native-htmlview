@@ -8,12 +8,8 @@ import {
     StyleSheet,
     Text,
     Image,
-    TouchableWithoutFeedback
+    View
 } from 'react-native'
-
-var LINE_BREAK = '\n'
-var PARAGRAPH_BREAK = '\n\n'
-var BULLET = '\u2022 '
 
 function htmlToElement(rawHtml, opts, done) {
     function domToElement(dom, parent) {
@@ -31,7 +27,7 @@ function htmlToElement(rawHtml, opts, done) {
                         key={index}
                         style={parent ? opts.styles[parent.name] : opts.styles.text}
                     >
-                        {entities.decodeHTML(node.data)}
+                    {entities.decodeHTML(node.data)}
                     </Text>
                 )
             }
@@ -47,63 +43,49 @@ function htmlToElement(rawHtml, opts, done) {
                         }>
                             {domToElement(node.children, node)}
                         </Text>
-                    )
-                }
-
-                if (node.name == 'img') {
-                    if (node.attribs.class === 'smiley'){
-                        return (
-                            <Image
-                                key={index}
-                                source={{uri: node.attribs.src}}
-                                style={opts.styles.smiley}
-                                resizeMode="contain"
-                            />
-                        )
-                    } else {
-                        return (
-                            <FitImage
-                                originalWidth={parseInt(node.attribs['hbx-width'], 10)}
-                                originalHeight={parseInt(node.attribs['hbx-height'], 10)}
-                                key={index}
-                                source={{uri: node.attribs.src}}
-                                resizeMode="contain"
-                            />
-                        )
-                    }
-                }
-
-                return (
-                    <Text key={index}>
-                        {node.name == 'pre' ? LINE_BREAK : null}
-                        {node.name == 'li' ? BULLET : null}
-                        {domToElement(node.children, node)}
-                        {node.name == 'br' || node.name == 'li' ? LINE_BREAK : null}
-                        {node.name == 'p' && index < list.length-1 ? PARAGRAPH_BREAK : null}
-                        {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? PARAGRAPH_BREAK : null}
-                    </Text>
                 )
             }
-        })
-    }
 
-    // <Lightbox underlayColor="white" navigator={opts.navigator}>
-    //
-    // </Lightbox>
+            if (node.name == 'img') {
+                if (node.attribs.class === 'smiley'){
+                    return (
+                        <Image
+                            key={index}
+                            source={{uri: node.attribs.src}}
+                            style={opts.styles.smiley}
+                            resizeMode="contain"
+                        />
+                    )
+                } else {
+                    return (
+                        <FitImage
+                            originalWidth={parseInt(node.attribs['hbx-width'], 10)}
+                            originalHeight={parseInt(node.attribs['hbx-height'], 10)}
+                            key={index}
+                            source={{uri: node.attribs.src}}
+                            resizeMode="contain"
+                        />
+                    )
+                }
+            }
 
-    var handler = new htmlparser.DomHandler(function (err, dom) {
-        if (err) done(err)
-        done(null, domToElement(dom))
+            return (
+                domToElement(node.children, node)
+            )
+        }
     })
-    var parser = new htmlparser.Parser(handler)
-    parser.write(rawHtml)
-    parser.done()
+}
+
+var handler = new htmlparser.DomHandler(function (err, dom) {
+    if (err) done(err)
+    done(null, domToElement(dom))
+})
+var parser = new htmlparser.Parser(handler)
+parser.write(rawHtml)
+parser.done()
 }
 
 var HTMLView = React.createClass({
-    mixins: [
-        PureRenderMixin
-    ],
     getDefaultProps() {
         return {
             onLinkPress: (url) => {
@@ -114,7 +96,7 @@ var HTMLView = React.createClass({
                         return Linking.openURL(url);
                     }
                 }).catch(err => console.error('An error occurred', err));
-            },
+            }
         }
     },
     getInitialState() {
@@ -152,7 +134,7 @@ var HTMLView = React.createClass({
     render() {
         let styles = Object.assign({}, baseStyles, this.props.stylesheet)
         if (this.state.element) {
-            return <Text style={styles.text} children={this.state.element} />
+            return <Text children={this.state.element} />
         }
         return <Text />
     }

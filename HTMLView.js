@@ -16,6 +16,7 @@ function htmlToElement(rawHtml, opts, done) {
         if (!dom) return null
 
         return dom.map((node, index, list) => {
+            //console.log(node)
             if (opts.customRenderer) {
                 var rendered = opts.customRenderer(node, index, list)
                 if (rendered || rendered === null) return rendered
@@ -77,6 +78,7 @@ function htmlToElement(rawHtml, opts, done) {
 }
 
 var handler = new htmlparser.DomHandler(function (err, dom) {
+    //console.log(dom)
     if (err) done(err)
     done(null, domToElement(dom))
 })
@@ -128,15 +130,52 @@ var HTMLView = React.createClass({
 
             if (err) return (this.props.onError || console.error)(err)
 
-            if (this.isMounted()) this.setState({element})
+            if (this.isMounted()) {
+                let index = 0;
+                let groupedElement = [];
+                let group = []
+                element.forEach((node, index) => {
+                    if (!node.props.originalWidth){
+                        group.push(node)
+                    } else {
+                        groupedElement.push(group)
+                        group = []
+                        groupedElement.push(node)
+                    }
+                })
+                if (group.length){
+                    groupedElement.push(group)
+                }
+                this.setState({
+                    element: groupedElement
+                })
+            }
         })
     },
     render() {
         let styles = Object.assign({}, baseStyles, this.props.stylesheet)
+
         if (this.state.element) {
-            return <Text children={this.state.element} />
+            return (
+                <View style={{
+                    flexDirection: 'column',
+                    alignSelf: 'stretch',
+                    flex: 1
+                }}>
+                {
+                    this.state.element.map((group) => {
+                        //console.log(map)
+                        if (Array.isArray(group)){
+                            return <Text children={group} />
+                        } else {
+                            return group
+                        }
+                    })
+                }
+                </View>
+            )
         }
-        return <Text />
+        return <View />
     }
 })
 

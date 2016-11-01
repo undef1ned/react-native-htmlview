@@ -1,8 +1,3 @@
-import htmlparser from './vendor/htmlparser2'
-import entities from './vendor/entities'
-import React from 'react'
-import PureRenderMixin from 'react-addons-pure-render-mixin'
-import FitImage from 'react-native-fit-image'
 import {
     Linking,
     StyleSheet,
@@ -11,12 +6,17 @@ import {
     View
 } from 'react-native'
 
+import htmlparser from './vendor/htmlparser2'
+import entities from './vendor/entities'
+import React from 'react'
+import PureRenderMixin from 'react-addons-pure-render-mixin'
+import FitImage from 'react-native-fit-image'
+
 function htmlToElement(rawHtml, opts, done) {
     function domToElement(dom, parent) {
         if (!dom) return null
 
         return dom.map((node, index, list) => {
-            //console.log(node)
             if (opts.customRenderer) {
                 var rendered = opts.customRenderer(node, index, list)
                 if (rendered || rendered === null) return rendered
@@ -78,7 +78,6 @@ function htmlToElement(rawHtml, opts, done) {
 }
 
 var handler = new htmlparser.DomHandler(function (err, dom) {
-    //console.log(dom)
     if (err) done(err)
     done(null, domToElement(dom))
 })
@@ -93,11 +92,10 @@ var HTMLView = React.createClass({
             onLinkPress: (url) => {
                 Linking.canOpenURL(url).then(supported => {
                     if (!supported) {
-                        console.log('Can\'t handle url: ' + url);
                     } else {
                         return Linking.openURL(url);
                     }
-                }).catch(err => console.error('An error occurred', err));
+                }).catch(err => {});
             }
         }
     },
@@ -135,6 +133,9 @@ var HTMLView = React.createClass({
                 let groupedElement = [];
                 let group = []
                 element.forEach((node, index) => {
+                    if (Array.isArray(node)){
+                        node = node[0]
+                    }
                     if (!node.props.originalWidth){
                         group.push(node)
                     } else {
@@ -163,8 +164,7 @@ var HTMLView = React.createClass({
                     flex: 1
                 }}>
                 {
-                    this.state.element.map((group) => {
-                        //console.log(map)
+                    this.state.element.map((group, i) => {
                         if (Array.isArray(group)){
                             return <Text children={group} />
                         } else {

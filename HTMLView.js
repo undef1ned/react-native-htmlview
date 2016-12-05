@@ -161,7 +161,7 @@ var HTMLView = React.createClass({
                 <View style={{
                     flexDirection: 'column',
                     alignSelf: 'stretch',
-                    flex: 1
+                    //flex: 1
                 }}>
                 {
                     this.state.element.map((group, i) => {

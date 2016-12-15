@@ -20,7 +20,14 @@ var HTMLView = React.createClass({
 
     getDefaultProps() {
         return {
-            onLinkPress: Linking.openURL,
+            onLinkPress: (url) => {
+                Linking.canOpenURL(url).then(supported => {
+                    if (!supported) {
+                    } else {
+                        return Linking.openURL(url);
+                    }
+                }).catch(err => {});
+            },
             onError: console.error.bind(console),
         }
     },

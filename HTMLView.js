@@ -74,12 +74,12 @@ var HTMLView = React.createClass({
                     if (Array.isArray(node)){
                         node = node[0]
                     }
-                    if (!node.props.originalWidth){
-                        group.push(node)
-                    } else {
+                    if (node && node.props && node.props.originalWidth){
                         groupedElement.push(group)
                         group = []
                         groupedElement.push(node)
+                    } else {
+                        group.push(node)
                     }
                 })
                 if (group.length){

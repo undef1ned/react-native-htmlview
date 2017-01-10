@@ -30,9 +30,7 @@ function htmlToElement(rawHtml, opts, done) {
                     <Text
                         key={index}
                         style={parent ? opts.styles[parent.name] : opts.styles.text}
-                    >
-                    {entities.decodeHTML(node.data)}
-                    </Text>
+                    >{entities.decodeHTML(node.data)}</Text>
                 )
             }
 
@@ -44,9 +42,7 @@ function htmlToElement(rawHtml, opts, done) {
                             onPress={() => {
                                 opts.linkHandler(entities.decodeHTML(node.attribs.href))
                             }
-                        }>
-                            {domToElement(node.children, node)}
-                        </Text>
+                        }>{domToElement(node.children, node)}</Text>
                     )
                 }
 

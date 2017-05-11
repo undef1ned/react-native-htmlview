@@ -74,7 +74,7 @@ var HTMLView = React.createClass({
                     if (Array.isArray(node)){
                         node = node[0]
                     }
-                    if (node && node.props && node.props.originalWidth){
+                    if (node && node.props && node.props.isImage == 'true'){
                         groupedElement.push(group)
                         group = []
                         groupedElement.push(node)

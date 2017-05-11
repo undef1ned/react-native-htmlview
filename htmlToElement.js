@@ -59,6 +59,7 @@ function htmlToElement(rawHtml, opts, done) {
                     } else {
                         return (
                             <FitImage
+                                isImage="true"
                                 originalWidth={parseInt(node.attribs['hbx-width'], 10)}
                                 originalHeight={parseInt(node.attribs['hbx-height'], 10)}
                                 key={index}

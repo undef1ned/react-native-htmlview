@@ -1,6 +1,7 @@
 var React = require('react')
 var ReactNative = require('react-native')
 var htmlToElement = require('./htmlToElement')
+var createReactClass = require('create-react-class')
 var {
     Linking,
     StyleSheet,
@@ -9,14 +10,7 @@ var {
 } = ReactNative
 
 
-var HTMLView = React.createClass({
-    propTypes: {
-        value: React.PropTypes.string,
-        stylesheet: React.PropTypes.object,
-        onLinkPress: React.PropTypes.func,
-        onError: React.PropTypes.func,
-        renderNode: React.PropTypes.func,
-    },
+var HTMLView = createReactClass({
 
     getDefaultProps() {
         return {

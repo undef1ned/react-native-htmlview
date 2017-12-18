@@ -52,6 +52,7 @@ var HTMLView = createReactClass({
 
         var opts = {
             linkHandler: this.props.onLinkPress,
+            containerWidth: this.props.containerWidth,
             styles: Object.assign({}, baseStyles, this.props.stylesheet),
             customRenderer: this.props.renderNode,
             navigator: this.props.navigator
@@ -97,7 +98,7 @@ var HTMLView = createReactClass({
                 {
                     this.state.element.map((group, i) => {
                         if (Array.isArray(group)){
-                            return <Text children={group} />
+                            return <Text style={this.props.stylesheet.text} children={group} />
                         } else {
                             return group
                         }

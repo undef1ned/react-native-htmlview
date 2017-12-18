@@ -62,6 +62,7 @@ function htmlToElement(rawHtml, opts, done) {
                                 isImage="true"
                                 originalWidth={parseInt(node.attribs['hbx-width'], 10)}
                                 originalHeight={parseInt(node.attribs['hbx-height'], 10)}
+                                containerWidth={parseInt(opts.containerWidth, 10)}
                                 key={index}
                                 source={{uri: node.attribs.src}}
                                 resizeMode="contain"

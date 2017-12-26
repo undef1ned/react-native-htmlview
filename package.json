@@ -20,6 +20,7 @@
   "files": [
     "index.js",
     "HTMLView.js",
+    "htmlToElement.js",
     "vendor/"
   ],
   "homepage": "https://github.com/jsdf/react-native-htmlview",
